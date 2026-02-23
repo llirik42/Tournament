@@ -1,6 +1,6 @@
 from typing import Callable
 
-Graph = dict[int, list[int]]
+from custom_types import Graph
 
 
 def _get_prime_numbers(m: int) -> list[int]:

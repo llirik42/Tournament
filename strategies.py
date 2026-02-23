@@ -1,18 +1,13 @@
 import random
-from typing import Callable
 
-from utils import Graph
-
-Chain = list[int]
-Strategy = Callable[[Graph], list[Chain]]
+from custom_types import Graph, Chain
 
 
-# жадная
-def honest_strategy(graph: Graph) -> list[Chain]:
+def min_neighbours_strategy(graph: Graph) -> list[Chain]:
     all_chains = []
 
     for start in graph:
-        used = set([start])
+        used = {start}
         chain = [start]
         current = start
 
@@ -36,12 +31,11 @@ def honest_strategy(graph: Graph) -> list[Chain]:
     return all_chains
 
 
-# жадная наоборот
-def not_honest_strategy(graph: Graph) -> list[Chain]:
+def max_neighbours_strategy(graph: Graph) -> list[Chain]:
     all_chains = []
 
     for start in graph:
-        used = set([start])
+        used = {start}
         chain = [start]
         current = start
 
@@ -55,7 +49,7 @@ def not_honest_strategy(graph: Graph) -> list[Chain]:
 
             next_node = candidates[0]
             for x in candidates:
-                if len(graph[x]) > len(graph[next_node]):  # тут
+                if len(graph[x]) > len(graph[next_node]):
                     next_node = x
             chain.append(next_node)
             used.add(next_node)
@@ -65,13 +59,12 @@ def not_honest_strategy(graph: Graph) -> list[Chain]:
     return all_chains
 
 
-# рандом
 def random_strategy(graph: Graph) -> list[Chain]:
     max_length = 0
     longest_chains = []
 
     for start in graph:
-        used = set([start])
+        used = {start}
         chain = [start]
         current = start
 
@@ -98,41 +91,10 @@ def random_strategy(graph: Graph) -> list[Chain]:
     return longest_chains
 
 
-# дфс
-def back_strategy(graph: Graph) -> list[Chain]:
-    max_length = 0
-    longest_chains = []
-
-    def dfs(chain, used):
-        nonlocal max_length, longest_chains
-        current = chain[-1]
-
-        for neighbor in graph[current]:
-            if neighbor not in used:
-                chain.append(neighbor)
-                used.add(neighbor)
-                dfs(chain, used)
-                chain.pop()
-                used.remove(neighbor)
-
-        if len(chain) > max_length:
-            max_length = len(chain)
-            longest_chains.clear()
-            longest_chains.append(chain.copy())
-        elif len(chain) == max_length:
-            longest_chains.append(chain.copy())
-
-    for start in graph:
-        dfs([start], set([start]))
-
-    return longest_chains
-
-
-# меньший сосед
 def smaller_number_strategy(graph: Graph) -> list[Chain]:
     all_chains = []
     for start in graph:
-        used = set([start])
+        used = {start}
         chain = [start]
         current = start
 
@@ -146,7 +108,7 @@ def smaller_number_strategy(graph: Graph) -> list[Chain]:
 
             next_node = candidates[0]
             for x in candidates:
-                if x < next_node:  # тут
+                if x < next_node:
                     next_node = x
             chain.append(next_node)
             used.add(next_node)
@@ -156,7 +118,6 @@ def smaller_number_strategy(graph: Graph) -> list[Chain]:
     return all_chains
 
 
-# максимальная сумма
 def _sum_digits(n):
     s = 0
     for ch in str(n):
@@ -167,7 +128,7 @@ def _sum_digits(n):
 def max_sum_digits_strategy(graph: Graph) -> list[Chain]:
     all_chains = []
     for start in graph:
-        used = set([start])
+        used = {start}
         chain = [start]
         current = start
 
@@ -181,7 +142,7 @@ def max_sum_digits_strategy(graph: Graph) -> list[Chain]:
 
             next_node = candidates[0]
             for x in candidates:
-                if _sum_digits(x) > _sum_digits(next_node):  # тут
+                if _sum_digits(x) > _sum_digits(next_node):
                     next_node = x
             chain.append(next_node)
             used.add(next_node)
@@ -191,11 +152,10 @@ def max_sum_digits_strategy(graph: Graph) -> list[Chain]:
     return all_chains
 
 
-# мин-макс-мин
 def alternating_strategy(graph: Graph) -> list[Chain]:
     all_chains = []
     for start in graph:
-        used = set([start])
+        used = {start}
         chain = [start]
         current = start
         step = 0
