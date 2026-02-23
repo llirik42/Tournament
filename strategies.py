@@ -1,17 +1,24 @@
 import random
+from typing import Callable
 
-#жадная
-def honest_strategy(neighbors):
+from utils import Graph
+
+Chain = list[int]
+Strategy = Callable[[Graph], list[Chain]]
+
+
+# жадная
+def honest_strategy(graph: Graph) -> list[Chain]:
     all_chains = []
-    
-    for start in neighbors:
+
+    for start in graph:
         used = set([start])
         chain = [start]
         current = start
 
         while True:
             candidates = []
-            for x in neighbors[current]:
+            for x in graph[current]:
                 if x not in used:
                     candidates.append(x)
             if not candidates:
@@ -19,7 +26,7 @@ def honest_strategy(neighbors):
 
             next_node = candidates[0]
             for x in candidates:
-                if len(neighbors[x]) < len(neighbors[next_node]):
+                if len(graph[x]) < len(graph[next_node]):
                     next_node = x
             chain.append(next_node)
             used.add(next_node)
@@ -28,18 +35,19 @@ def honest_strategy(neighbors):
 
     return all_chains
 
-#жадная наоборот
-def not_honest_strategy(neighbors):
+
+# жадная наоборот
+def not_honest_strategy(graph: Graph) -> list[Chain]:
     all_chains = []
-    
-    for start in neighbors:
+
+    for start in graph:
         used = set([start])
         chain = [start]
         current = start
 
         while True:
             candidates = []
-            for x in neighbors[current]:
+            for x in graph[current]:
                 if x not in used:
                     candidates.append(x)
             if not candidates:
@@ -47,7 +55,7 @@ def not_honest_strategy(neighbors):
 
             next_node = candidates[0]
             for x in candidates:
-                if len(neighbors[x]) > len(neighbors[next_node]): #тут
+                if len(graph[x]) > len(graph[next_node]):  # тут
                     next_node = x
             chain.append(next_node)
             used.add(next_node)
@@ -56,19 +64,20 @@ def not_honest_strategy(neighbors):
 
     return all_chains
 
-#рандом
-def random_strategy(neighbors):
+
+# рандом
+def random_strategy(graph: Graph) -> list[Chain]:
     max_length = 0
     longest_chains = []
 
-    for start in neighbors:
+    for start in graph:
         used = set([start])
         chain = [start]
         current = start
 
         while True:
             candidates = []
-            for x in neighbors[current]:
+            for x in graph[current]:
                 if x not in used:
                     candidates.append(x)
             if not candidates:
@@ -88,16 +97,17 @@ def random_strategy(neighbors):
 
     return longest_chains
 
-#дфс
-def back_strategy(neighbors):
-    
+
+# дфс
+def back_strategy(graph: Graph) -> list[Chain]:
     max_length = 0
     longest_chains = []
+
     def dfs(chain, used):
         nonlocal max_length, longest_chains
         current = chain[-1]
 
-        for neighbor in neighbors[current]:
+        for neighbor in graph[current]:
             if neighbor not in used:
                 chain.append(neighbor)
                 used.add(neighbor)
@@ -111,23 +121,24 @@ def back_strategy(neighbors):
             longest_chains.append(chain.copy())
         elif len(chain) == max_length:
             longest_chains.append(chain.copy())
-    for start in neighbors:
+
+    for start in graph:
         dfs([start], set([start]))
 
     return longest_chains
 
-#меньший сосед
-def smaller_number_strategy(neighbors):
 
+# меньший сосед
+def smaller_number_strategy(graph: Graph) -> list[Chain]:
     all_chains = []
-    for start in neighbors:
+    for start in graph:
         used = set([start])
         chain = [start]
         current = start
 
         while True:
             candidates = []
-            for x in neighbors[current]:
+            for x in graph[current]:
                 if x not in used:
                     candidates.append(x)
             if not candidates:
@@ -135,7 +146,7 @@ def smaller_number_strategy(neighbors):
 
             next_node = candidates[0]
             for x in candidates:
-                if x < next_node: #тут
+                if x < next_node:  # тут
                     next_node = x
             chain.append(next_node)
             used.add(next_node)
@@ -144,23 +155,25 @@ def smaller_number_strategy(neighbors):
 
     return all_chains
 
-#максимальная сумма
-def sum_digits(n):
+
+# максимальная сумма
+def _sum_digits(n):
     s = 0
     for ch in str(n):
         s += int(ch)
     return s
-def max_sum_digits_strategy(neighbors):
 
+
+def max_sum_digits_strategy(graph: Graph) -> list[Chain]:
     all_chains = []
-    for start in neighbors:
+    for start in graph:
         used = set([start])
         chain = [start]
         current = start
 
         while True:
             candidates = []
-            for x in neighbors[current]:
+            for x in graph[current]:
                 if x not in used:
                     candidates.append(x)
             if not candidates:
@@ -168,7 +181,7 @@ def max_sum_digits_strategy(neighbors):
 
             next_node = candidates[0]
             for x in candidates:
-                if sum_digits(x) > sum_digits(next_node): #тут 
+                if _sum_digits(x) > _sum_digits(next_node):  # тут
                     next_node = x
             chain.append(next_node)
             used.add(next_node)
@@ -176,11 +189,12 @@ def max_sum_digits_strategy(neighbors):
         all_chains.append(chain)
 
     return all_chains
-#мин-макс-мин 
-def alternating_strategy(neighbors):
 
+
+# мин-макс-мин
+def alternating_strategy(graph: Graph) -> list[Chain]:
     all_chains = []
-    for start in neighbors:
+    for start in graph:
         used = set([start])
         chain = [start]
         current = start
@@ -188,7 +202,7 @@ def alternating_strategy(neighbors):
 
         while True:
             candidates = []
-            for x in neighbors[current]:
+            for x in graph[current]:
                 if x not in used:
                     candidates.append(x)
             if not candidates:
@@ -196,11 +210,11 @@ def alternating_strategy(neighbors):
 
             next_node = candidates[0]
             if step % 2 == 0:
-                for x in candidates: #шаг четный — берём максимум
+                for x in candidates:  # шаг четный — берём максимум
                     if x > next_node:
                         next_node = x
             else:
-                for x in candidates: #шаг нечетный — берём минимум
+                for x in candidates:  # шаг нечетный — берём минимум
                     if x < next_node:
                         next_node = x
             chain.append(next_node)
