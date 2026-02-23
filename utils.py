@@ -82,7 +82,7 @@ def _are_similar_b(a: int, b: int) -> bool:
     return False
 
 
-def _get_graph(prime_numbers: list[int], are_similar: Callable[[int, int], bool]) -> Graph:
+def _construct_graph(prime_numbers: list[int], are_similar: Callable[[int, int], bool]) -> Graph:
     graph = {}
 
     for i in range(len(prime_numbers)):
@@ -100,9 +100,9 @@ def _get_graph(prime_numbers: list[int], are_similar: Callable[[int, int], bool]
     return graph
 
 
-def get_graph_a(prime_numbers: list[int]) -> Graph:
-    return _get_graph(prime_numbers, _are_similar_a)
+def construct_graph_a(prime_numbers: list[int]) -> Graph:
+    return _construct_graph(prime_numbers, _are_similar_a)
 
 
-def get_graph_b(prime_numbers: list[int]) -> Graph:
-    return _get_graph(prime_numbers, _are_similar_b)
+def construct_graph_b(prime_numbers: list[int]) -> Graph:
+    return _construct_graph(prime_numbers, _are_similar_b)

@@ -1,5 +1,5 @@
 import strategies
-from utils import get_prime_numbers_a, get_prime_numbers_b, get_graph_a, get_graph_b
+from utils import get_prime_numbers_a, get_prime_numbers_b, construct_graph_a, construct_graph_b
 import time
 import matplotlib.pyplot as plt
 
@@ -83,10 +83,10 @@ def main():
             print("☆" * 40)
             if p == 1:
                 prime_numbers = get_prime_numbers_a(m)
-                neighbors = get_graph_a(prime_numbers)
+                neighbors = construct_graph_a(prime_numbers)
             else:
                 prime_numbers = get_prime_numbers_b(m)
-                neighbors = get_graph_b(prime_numbers)
+                neighbors = construct_graph_b(prime_numbers)
             if not neighbors:
                 print("Граф пустой")
                 for strat in strategies_list:
