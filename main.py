@@ -62,10 +62,10 @@ def main():
     m_list = [20,50,70,80,200,877,1000,2300]
     points = [1, 2]
     strategies_list = [
-        strategies.honest_strategya,
-        strategies.not_honest_strategya,
-        strategies.random_strategya,
-        strategies.back_strategya,
+        strategies.honest_strategy,
+        strategies.not_honest_strategy,
+        strategies.random_strategy,
+        strategies.back_strategy,
         strategies.smaller_number_strategy,
         strategies.max_sum_digits_strategy,
         strategies.alternating_strategy

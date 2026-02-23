@@ -1,7 +1,7 @@
 import random
 
 #жадная
-def honest_strategya(neighbors):
+def honest_strategy(neighbors):
     all_chains = []
     
     for start in neighbors:
@@ -29,7 +29,7 @@ def honest_strategya(neighbors):
     return all_chains
 
 #жадная наоборот
-def not_honest_strategya(neighbors):
+def not_honest_strategy(neighbors):
     all_chains = []
     
     for start in neighbors:
@@ -57,7 +57,7 @@ def not_honest_strategya(neighbors):
     return all_chains
 
 #рандом
-def random_strategya(neighbors):
+def random_strategy(neighbors):
     max_length = 0
     longest_chains = []
 
@@ -89,7 +89,7 @@ def random_strategya(neighbors):
     return longest_chains
 
 #дфс
-def back_strategya(neighbors):
+def back_strategy(neighbors):
     
     max_length = 0
     longest_chains = []
