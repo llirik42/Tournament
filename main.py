@@ -1,7 +1,6 @@
 import strategies
 from graph_utils import sieve, n, graph_a, graph_b
 import time
-import networkx as nx
 import matplotlib.pyplot as plt
 
 #функция для уникальности цепочек
@@ -95,18 +94,6 @@ def main():
                     times_dict[strat.__name__].append(None)
                 continue
 
-            """
-            #графы, их нужно скипать руками, поэтому комм
-            G = nx.Graph() #пустой граф
-            for node in neighbors: 
-                for neighbor in neighbors[node]:
-                    G.add_edge(node, neighbor) #ребро между числами
-            plt.figure()
-            nx.draw(G, with_labels=True) 
-            plt.title(f"Граф: m={m}, пункт={p}")
-            plt.show()
-            """
-            
             #запуск стратегий
             for strat in strategies_list:
                 if strat.__name__ == "back_strategya" and m > 40:
