@@ -1,5 +1,5 @@
 import strategies
-from graph_utils import sieve, n, graph_a, graph_b
+from utils import get_prime_numbers_a, get_prime_numbers_b, get_graph_a, get_graph_b
 import time
 import matplotlib.pyplot as plt
 
@@ -82,12 +82,11 @@ def main():
             print(f"m = {m}, пункт = {p}")
             print("☆" * 40)
             if p == 1:
-                all_primes = sieve(m)
-                prime_numbers = n(all_primes, m)
-                neighbors = graph_a(prime_numbers)
+                prime_numbers = get_prime_numbers_a(m)
+                neighbors = get_graph_a(prime_numbers)
             else:
-                prime_numbers = sieve(m)
-                neighbors = graph_b(prime_numbers)
+                prime_numbers = get_prime_numbers_b(m)
+                neighbors = get_graph_b(prime_numbers)
             if not neighbors:
                 print("Граф пустой")
                 for strat in strategies_list:
@@ -115,7 +114,7 @@ def main():
                 t_plot.append(t_list[i])
             i += 1
             
-        plt.figure() 
+        plt.figure()
         plt.plot(m_plot, t_plot, marker='*') #х м, у время, звезда
         plt.xlabel("m")
         plt.ylabel("Время выполнения (сек)")
