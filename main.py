@@ -61,12 +61,12 @@ def main():
     point = "b"
 
     running_settings = [
-        # (strategies.min_neighbours_strategy, 5),
-        # (strategies.max_neighbours_strategy, 5),
-        # (strategies.random_strategy, 20),
-        # (strategies.smaller_number_strategy, 5),
-        (strategies.max_sum_digits_strategy, 10),
-        # (strategies.alternating_strategy, 5)
+        (strategies.min_neighbours_strategy, 5),
+        (strategies.max_neighbours_strategy, 5),
+        (strategies.random_strategy, 25),
+        (strategies.smaller_number_strategy, 5),
+        (strategies.max_sum_digits_strategy, 5),
+        (strategies.alternating_strategy, 5)
     ]
 
     times = {}
@@ -115,4 +115,6 @@ def main():
     plt.show()
 
 
-main()
+
+if __name__ == "__main__":
+    main()
