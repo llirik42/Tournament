@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 import strategies
-from running import run_for_lengths
+from running import run_for_lengths, run_for_time_and_max_length
 
 
 def main():
@@ -21,15 +21,16 @@ def main():
     # )
 
     run_for_lengths(
-        m=25000,
-        point="b",
+        m=60,
+        point="a",
         settings=[
             (strategies.min_neighbours_strategy, 5),
             (strategies.max_neighbours_strategy, 5),
             (strategies.random_strategy, 25),
             (strategies.smaller_number_strategy, 5),
             (strategies.max_sum_digits_strategy, 5),
-            (strategies.alternating_strategy, 5)
+            (strategies.alternating_strategy, 5),
+            (strategies.back_tracing_strategy, 5)
         ]
     )
 

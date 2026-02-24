@@ -197,3 +197,32 @@ def alternating_strategy(graph: Graph) -> list[Chain]:
         all_chains.append(chain)
 
     return all_chains
+
+
+def back_tracing_strategy(graph: Graph) -> list[Chain]:
+    max_length = 0
+    longest_chains = []
+
+    def dfs(chain, used):
+        nonlocal max_length, longest_chains
+        current = chain[-1]
+
+        for neighbor in graph[current]:
+            if neighbor not in used:
+                chain.append(neighbor)
+                used.add(neighbor)
+                dfs(chain, used)
+                chain.pop()
+                used.remove(neighbor)
+
+        if len(chain) > max_length:
+            max_length = len(chain)
+            longest_chains.clear()
+            longest_chains.append(chain.copy())
+        elif len(chain) == max_length:
+            longest_chains.append(chain.copy())
+
+    for start in graph:
+        dfs([start], set([start]))
+
+    return longest_chains
