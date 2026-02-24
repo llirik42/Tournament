@@ -26,6 +26,7 @@ def min_neighbours_strategy(graph: Graph) -> list[Chain]:
             chain.append(next_node)
             used.add(next_node)
             current = next_node
+
         all_chains.append(chain)
 
     return all_chains
@@ -54,14 +55,14 @@ def max_neighbours_strategy(graph: Graph) -> list[Chain]:
             chain.append(next_node)
             used.add(next_node)
             current = next_node
+
         all_chains.append(chain)
 
     return all_chains
 
 
 def random_strategy(graph: Graph) -> list[Chain]:
-    max_length = 0
-    longest_chains = []
+    all_chains = []
 
     for start in graph:
         used = {start}
@@ -81,14 +82,9 @@ def random_strategy(graph: Graph) -> list[Chain]:
             used.add(next_node)
             current = next_node
 
-        if len(chain) > max_length:
-            max_length = len(chain)
-            longest_chains.clear()
-            longest_chains.append(chain)
-        elif len(chain) == max_length:
-            longest_chains.append(chain)
+        all_chains.append(chain)
 
-    return longest_chains
+    return all_chains
 
 
 def smaller_number_strategy(graph: Graph) -> list[Chain]:
@@ -113,6 +109,7 @@ def smaller_number_strategy(graph: Graph) -> list[Chain]:
             chain.append(next_node)
             used.add(next_node)
             current = next_node
+
         all_chains.append(chain)
 
     return all_chains
@@ -150,6 +147,7 @@ def max_sum_digits_strategy(graph: Graph) -> list[Chain]:
             chain.append(next_node)
             used.add(next_node)
             current = next_node
+
         all_chains.append(chain)
 
     return all_chains
@@ -184,6 +182,7 @@ def alternating_strategy(graph: Graph) -> list[Chain]:
             used.add(next_node)
             current = next_node
             step += 1
+
         all_chains.append(chain)
 
     return all_chains

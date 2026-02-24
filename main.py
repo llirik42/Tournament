@@ -1,14 +1,16 @@
 import time
 
 import matplotlib.pyplot as plt
-
-import strategies
-from utils import construct_graph_a, construct_graph_b
-from custom_types import Strategy, Graph
 from tqdm import tqdm
 
+import strategies
+from custom_types import Chain
+from custom_types import Strategy, Graph
+from utils import construct_graph_a
+
+
 # функция для уникальности цепочек
-def unique_chains(chains):
+def unique_chains(chains: list[Chain]) -> list[Chain]:
     unique = []
     for chain in chains:
         if chain not in unique and list(reversed(chain)) not in unique:
@@ -61,7 +63,7 @@ def main():
         # (strategies.random_strategy, 20),
         # (strategies.smaller_number_strategy, 5),
         (strategies.max_sum_digits_strategy, 5),
-        #(strategies.alternating_strategy, 5)
+        # (strategies.alternating_strategy, 5)
     ]
 
     times = {}
@@ -102,6 +104,5 @@ def main():
 
     plt.show()
 
-    print(times)
 
 main()
