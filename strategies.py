@@ -115,12 +115,23 @@ def smaller_number_strategy(graph: Graph) -> list[Chain]:
     return all_chains
 
 
+digits_sums = {}
+
+
 def _sum_digits(n):
+    global digits_sums
+
+    if n in digits_sums:
+        return digits_sums[n]
+
+    n_copy = n
     s = 0
 
-    while n > 0:
-        s += n % 10
-        n //= 10
+    while n_copy > 0:
+        s += n_copy % 10
+        n_copy //= 10
+
+    digits_sums[n] = s
 
     return s
 

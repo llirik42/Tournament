@@ -6,7 +6,7 @@ from tqdm import tqdm
 import strategies
 from custom_types import Chain
 from custom_types import Strategy, Graph
-from utils import construct_graph_a
+from utils import construct_graph_a, construct_graph_b
 
 
 # функция для уникальности цепочек
@@ -55,14 +55,17 @@ def run_strategy(strategy: Strategy, graph: Graph, launches: int = 20) -> dict[s
 def main():
     plt.rcParams['font.size'] = 20
 
-    m_list = range(100, 999, 10)
+    #m_list = range(100, 999, 10)
+    m_list = range(1000, 11000, 100)
+
+    point = "b"
 
     running_settings = [
         # (strategies.min_neighbours_strategy, 5),
         # (strategies.max_neighbours_strategy, 5),
         # (strategies.random_strategy, 20),
         # (strategies.smaller_number_strategy, 5),
-        (strategies.max_sum_digits_strategy, 5),
+        (strategies.max_sum_digits_strategy, 10),
         # (strategies.alternating_strategy, 5)
     ]
 
@@ -73,8 +76,15 @@ def main():
         times[strategy.__name__] = []
         max_lengths[strategy.__name__] = []
 
+    if point == "a":
+        construction_function = construct_graph_a
+    elif point == "b":
+        construction_function = construct_graph_b
+    else:
+        raise ValueError(f"Unknown point: {point}")
+
     for m in tqdm(m_list):
-        graph = construct_graph_a(m)
+        graph = construction_function(m)
 
         for strategy, launches in running_settings:
             running_result = run_strategy(strategy=strategy, graph=graph, launches=launches)
