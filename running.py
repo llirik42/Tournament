@@ -30,7 +30,7 @@ def _run_strategy(strategy: Strategy, graph: Graph, launches: int = 20) -> dict[
 
     # Максимальная длина цепочек
     max_length = 0
-    lengths = []
+    lengths = []  # TODO: возвращать не длины цепочек, а сами цепочки (функция run_for_lengths должна всё так же выводить длины, нужно добавить функцию run_for_chains, которая будет принимать m, стратегию, число запусков, пункт a/b и печатать список найденных длинных цепочек (цепочек с максимальной длиной)
 
     for c in all_chains:
         current_length = len(c)

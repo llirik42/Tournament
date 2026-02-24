@@ -118,7 +118,10 @@ def smaller_number_strategy(graph: Graph) -> list[Chain]:
 digits_sums = {}
 
 
+# TODO: действительно ли мемоизация даёт прирост по времени при запуске на одном m
 def _sum_digits(n):
+    # Мемоизация
+
     global digits_sums
 
     if n in digits_sums:
@@ -215,6 +218,7 @@ def back_tracing_strategy(graph: Graph) -> list[Chain]:
                 chain.pop()
                 used.remove(neighbor)
 
+        # Здесь фильтрация нужна, так как эта стратегия вернёт вообще все пути в графе (слишком много!)
         if len(chain) > max_length:
             max_length = len(chain)
             longest_chains.clear()
@@ -223,6 +227,6 @@ def back_tracing_strategy(graph: Graph) -> list[Chain]:
             longest_chains.append(chain.copy())
 
     for start in graph:
-        dfs([start], set([start]))
+        dfs([start], {start})
 
     return longest_chains
