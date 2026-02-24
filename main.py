@@ -53,40 +53,40 @@ def run_strategy(strategy: Strategy, graph: Graph, launches: int = 20) -> dict[s
 def main():
     plt.rcParams['font.size'] = 20
 
-    m_list = range(1000, 16000, 100)
+    m_list = range(100, 999, 10)
 
     running_settings = [
-        (strategies.min_neighbours_strategy, 5),
-        (strategies.max_neighbours_strategy, 5),
-        (strategies.random_strategy, 20),
-        (strategies.smaller_number_strategy, 5),
+        # (strategies.min_neighbours_strategy, 5),
+        # (strategies.max_neighbours_strategy, 5),
+        # (strategies.random_strategy, 20),
+        # (strategies.smaller_number_strategy, 5),
         (strategies.max_sum_digits_strategy, 5),
-        (strategies.alternating_strategy, 5)
+        #(strategies.alternating_strategy, 5)
     ]
 
-    times_a = {}
-    max_lengths_a = {}
+    times = {}
+    max_lengths = {}
 
     for strategy, launches in running_settings:
-        times_a[strategy.__name__] = []
-        max_lengths_a[strategy.__name__] = []
+        times[strategy.__name__] = []
+        max_lengths[strategy.__name__] = []
 
     for m in tqdm(m_list):
-        graph = construct_graph_b(m)
+        graph = construct_graph_a(m)
 
         for strategy, launches in running_settings:
             running_result = run_strategy(strategy=strategy, graph=graph, launches=launches)
             avg_time_ms = running_result["avg_time_ms"]
             max_length = running_result["max_length"]
             max_length_count = running_result["max_length_count"]
-            times_a[strategy.__name__].append(avg_time_ms)
-            max_lengths_a[strategy.__name__].append(max_length)
+            times[strategy.__name__].append(avg_time_ms)
+            max_lengths[strategy.__name__].append(max_length)
 
     plt.figure()
     for s, _ in running_settings:
         label = s.__name__
         label = label.replace("_strategy", "")
-        plt.plot(m_list, times_a[s.__name__], label=label, linewidth=3)
+        plt.plot(m_list, times[s.__name__], label=label, linewidth=3)
         plt.xlabel("m")
         plt.ylabel("time (ms)")
         plt.legend()
@@ -95,12 +95,13 @@ def main():
     for s, _ in running_settings:
         label = s.__name__
         label = label.replace("_strategy", "")
-        plt.plot(m_list, max_lengths_a[s.__name__], label=label, linewidth=3)
+        plt.plot(m_list, max_lengths[s.__name__], label=label, linewidth=3)
         plt.xlabel("m")
         plt.ylabel("max length")
         plt.legend()
 
     plt.show()
 
+    print(times)
 
 main()

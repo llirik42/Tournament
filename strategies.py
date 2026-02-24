@@ -120,8 +120,11 @@ def smaller_number_strategy(graph: Graph) -> list[Chain]:
 
 def _sum_digits(n):
     s = 0
-    for ch in str(n):
-        s += int(ch)
+
+    while n > 0:
+        s += n % 10
+        n //= 10
+
     return s
 
 
