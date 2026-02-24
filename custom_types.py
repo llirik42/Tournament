@@ -10,3 +10,6 @@ class Strategy(Protocol):
 
     def __call__(self, graph: Graph) -> list[Chain]:
         ...
+
+
+RunningSettings = list[tuple[Strategy, int]]  # List of (strategy, number of launches)
