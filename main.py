@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 
 import strategies
 from utils import construct_graph_a, construct_graph_b
-
+from custom_types import Strategy, Graph
+from tqdm import tqdm
 
 # функция для уникальности цепочек
 def unique_chains(chains):
@@ -15,113 +16,91 @@ def unique_chains(chains):
     return unique
 
 
-def run_strategy(strategy, graph, launches=20):
+def run_strategy(strategy: Strategy, graph: Graph, launches: int = 20) -> dict[str, float | int]:
     all_chains = []
     times = []
 
-    if strategy.__name__ == "random_strategya":
-        for i in range(launches):
-            start = time.time()
-            chains = strategy(graph)
-            end = time.time()
-            times.append(end - start)
-            all_chains.extend(chains)
-        avg_time = sum(times) / launches
-    else:
+    for i in range(launches):
         start = time.time()
         chains = strategy(graph)
         end = time.time()
+        times.append(end - start)
         all_chains.extend(chains)
-        avg_time = end - start
+    avg_time_ms = 1000 * sum(times) / launches
 
-    # макс длина цепочек
+    # Максимальная длина цепочек
     max_length = 0
     for c in all_chains:
         if len(c) > max_length:
             max_length = len(c)
 
-    # число цепочек с макс длиной
-    max_chains = []
+    # Число цепочек с максимальной длиной
+    max_length_chains = []
     for c in all_chains:
         if len(c) == max_length:
-            max_chains.append(c)
-    max_chains = unique_chains(max_chains)
+            max_length_chains.append(c)
+    max_length_chains = unique_chains(max_length_chains)
 
-    print(f"Выбранная стратегия: {strategy.__name__}")
-    if strategy.__name__ == "random_strategya":
-        print(f"Среднее время выполнения: {avg_time:.5f} сек")
-    else:
-        print(f"Время выполнения: {avg_time:.5f} сек")
-    print(f"Максимальная длина цепочек: {max_length}")
-    if strategy.__name__ == "random_strategya" and all_chains:
-        avg_length = sum(len(c) for c in all_chains) / len(all_chains)
-        print(f"Средняя длина: {avg_length:.3f}")
-    print(f"Количество найденных цепочек с этой длиной: {len(max_chains)}")
-    print("☆" * 30)
+    result = {
+        "avg_time_ms": avg_time_ms,
+        "max_length": max_length,
+        "max_length_count": len(max_length_chains),
+    }
 
-    return avg_time  # для графика среднее время
+    return result
 
 
 def main():
-    m_list = [20, 50, 70, 80, 200, 877, 1000, 2300]
-    points = [1, 2]
-    strategies_list = [
-        strategies.min_neighbours_strategy,
-        strategies.max_neighbours_strategy,
-        strategies.random_strategy,
-        strategies.smaller_number_strategy,
-        strategies.max_sum_digits_strategy,
-        strategies.alternating_strategy
+    plt.rcParams['font.size'] = 20
+
+    m_list = range(1000, 16000, 100)
+
+    running_settings = [
+        (strategies.min_neighbours_strategy, 5),
+        (strategies.max_neighbours_strategy, 5),
+        (strategies.random_strategy, 20),
+        (strategies.smaller_number_strategy, 5),
+        (strategies.max_sum_digits_strategy, 5),
+        (strategies.alternating_strategy, 5)
     ]
 
-    # словарь для хранения времени каждой стратегии
-    times_dict = dict()
-    for strat in strategies_list:
-        times_dict[strat.__name__] = []
+    times_a = {}
+    max_lengths_a = {}
 
-    for m in m_list:
-        for p in points:
-            print("\n" + "☆" * 40)
-            print(f"m = {m}, пункт = {p}")
-            print("☆" * 40)
-            if p == 1:
-                graph = construct_graph_a(m)
-            else:
-                graph = construct_graph_b(m)
-            if not graph:
-                print("Граф пустой")
-                for strat in strategies_list:
-                    times_dict[strat.__name__].append(None)
-                continue
+    for strategy, launches in running_settings:
+        times_a[strategy.__name__] = []
+        max_lengths_a[strategy.__name__] = []
 
-            # запуск стратегий
-            for strat in strategies_list:
-                if strat.__name__ == "back_strategya" and m > 40:
-                    print("дфс стратегия пропущена (слишком долго)")
-                    times_dict[strat.__name__].append(None)
-                    continue
-                avg_time = run_strategy(strat, graph, launches=10 if strat.__name__ == "random_strategya" else 1)
-                times_dict[strat.__name__].append(avg_time)
+    for m in tqdm(m_list):
+        graph = construct_graph_b(m)
 
-    # графики
-    for strat_name in times_dict:
-        t_plot = []
-        m_plot = []
-        t_list = times_dict[strat_name]  # время для стратегии
-        i = 0
-        while i < len(m_list):
-            if t_list[i] is not None:
-                m_plot.append(m_list[i])
-                t_plot.append(t_list[i])
-            i += 1
+        for strategy, launches in running_settings:
+            running_result = run_strategy(strategy=strategy, graph=graph, launches=launches)
+            avg_time_ms = running_result["avg_time_ms"]
+            max_length = running_result["max_length"]
+            max_length_count = running_result["max_length_count"]
+            times_a[strategy.__name__].append(avg_time_ms)
+            max_lengths_a[strategy.__name__].append(max_length)
 
-        plt.figure()
-        plt.plot(m_plot, t_plot, marker='*')  # х м, у время, звезда
+    plt.figure()
+    for s, _ in running_settings:
+        label = s.__name__
+        label = label.replace("_strategy", "")
+        plt.plot(m_list, times_a[s.__name__], label=label, linewidth=3)
         plt.xlabel("m")
-        plt.ylabel("Время выполнения (сек)")
-        plt.title(f"Стратегия: {strat_name}")
-        plt.grid(True)  # сетка
-        plt.show()
+        plt.ylabel("time (ms)")
+        plt.legend()
+
+    plt.figure()
+    for s, _ in running_settings:
+        label = s.__name__
+        label = label.replace("_strategy", "")
+        plt.plot(m_list, max_lengths_a[s.__name__], label=label, linewidth=3)
+        plt.xlabel("m")
+        plt.ylabel("max length")
+        plt.legend()
+
+    plt.show()
 
 
 main()
