@@ -23,7 +23,7 @@ def _get_prime_numbers(m: int) -> list[int]:
     return prime_numbers
 
 
-def get_prime_numbers_a(m: int) -> list[int]:
+def _get_prime_numbers_a(m: int) -> list[int]:
     all_prime_numbers = _get_prime_numbers(m)
     lower_limit = 10 ** (len(str(m)) - 1)
     result = []
@@ -35,7 +35,7 @@ def get_prime_numbers_a(m: int) -> list[int]:
     return result
 
 
-def get_prime_numbers_b(m: int) -> list[int]:
+def _get_prime_numbers_b(m: int) -> list[int]:
     return _get_prime_numbers(m)
 
 
@@ -100,9 +100,11 @@ def _construct_graph(prime_numbers: list[int], are_similar: Callable[[int, int],
     return graph
 
 
-def construct_graph_a(prime_numbers: list[int]) -> Graph:
+def construct_graph_a(m: int) -> Graph:
+    prime_numbers = _get_prime_numbers_a(m)
     return _construct_graph(prime_numbers, _are_similar_a)
 
 
-def construct_graph_b(prime_numbers: list[int]) -> Graph:
+def construct_graph_b(m: int) -> Graph:
+    prime_numbers = _get_prime_numbers_b(m)
     return _construct_graph(prime_numbers, _are_similar_b)

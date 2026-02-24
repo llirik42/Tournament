@@ -1,9 +1,12 @@
-import strategies
-from utils import get_prime_numbers_a, get_prime_numbers_b, construct_graph_a, construct_graph_b
 import time
+
 import matplotlib.pyplot as plt
 
-#функция для уникальности цепочек
+import strategies
+from utils import construct_graph_a, construct_graph_b
+
+
+# функция для уникальности цепочек
 def unique_chains(chains):
     unique = []
     for chain in chains:
@@ -31,13 +34,13 @@ def run_strategy(strategy, graph, launches=20):
         all_chains.extend(chains)
         avg_time = end - start
 
-    #макс длина цепочек
+    # макс длина цепочек
     max_length = 0
     for c in all_chains:
         if len(c) > max_length:
             max_length = len(c)
 
-    #число цепочек с макс длиной
+    # число цепочек с макс длиной
     max_chains = []
     for c in all_chains:
         if len(c) == max_length:
@@ -56,22 +59,22 @@ def run_strategy(strategy, graph, launches=20):
     print(f"Количество найденных цепочек с этой длиной: {len(max_chains)}")
     print("☆" * 30)
 
-    return avg_time  #для графика среднее время
+    return avg_time  # для графика среднее время
+
 
 def main():
-    m_list = [20,50,70,80,200,877,1000,2300]
+    m_list = [20, 50, 70, 80, 200, 877, 1000, 2300]
     points = [1, 2]
     strategies_list = [
-        strategies.honest_strategy,
-        strategies.not_honest_strategy,
+        strategies.min_neighbours_strategy,
+        strategies.max_neighbours_strategy,
         strategies.random_strategy,
-        strategies.back_strategy,
         strategies.smaller_number_strategy,
         strategies.max_sum_digits_strategy,
         strategies.alternating_strategy
     ]
 
-    #словарь для хранения времени каждой стратегии
+    # словарь для хранения времени каждой стратегии
     times_dict = dict()
     for strat in strategies_list:
         times_dict[strat.__name__] = []
@@ -82,44 +85,43 @@ def main():
             print(f"m = {m}, пункт = {p}")
             print("☆" * 40)
             if p == 1:
-                prime_numbers = get_prime_numbers_a(m)
-                neighbors = construct_graph_a(prime_numbers)
+                graph = construct_graph_a(m)
             else:
-                prime_numbers = get_prime_numbers_b(m)
-                neighbors = construct_graph_b(prime_numbers)
-            if not neighbors:
+                graph = construct_graph_b(m)
+            if not graph:
                 print("Граф пустой")
                 for strat in strategies_list:
                     times_dict[strat.__name__].append(None)
                 continue
 
-            #запуск стратегий
+            # запуск стратегий
             for strat in strategies_list:
                 if strat.__name__ == "back_strategya" and m > 40:
                     print("дфс стратегия пропущена (слишком долго)")
                     times_dict[strat.__name__].append(None)
                     continue
-                avg_time = run_strategy(strat, neighbors, launches=10 if strat.__name__=="random_strategya" else 1)
+                avg_time = run_strategy(strat, graph, launches=10 if strat.__name__ == "random_strategya" else 1)
                 times_dict[strat.__name__].append(avg_time)
 
-    #графики
+    # графики
     for strat_name in times_dict:
         t_plot = []
         m_plot = []
-        t_list = times_dict[strat_name] #время для стратегии
+        t_list = times_dict[strat_name]  # время для стратегии
         i = 0
         while i < len(m_list):
             if t_list[i] is not None:
                 m_plot.append(m_list[i])
                 t_plot.append(t_list[i])
             i += 1
-            
+
         plt.figure()
-        plt.plot(m_plot, t_plot, marker='*') #х м, у время, звезда
+        plt.plot(m_plot, t_plot, marker='*')  # х м, у время, звезда
         plt.xlabel("m")
         plt.ylabel("Время выполнения (сек)")
         plt.title(f"Стратегия: {strat_name}")
-        plt.grid(True) #сетка
+        plt.grid(True)  # сетка
         plt.show()
+
 
 main()
