@@ -21,7 +21,7 @@ def main():
     # )
 
     run_for_lengths(
-        m=20000,
+        m=200,
         point="b",
         settings=[
             (strategies.min_neighbours_strategy, 1),
@@ -30,8 +30,9 @@ def main():
             (strategies.smaller_number_strategy, 5),
             (strategies.max_sum_digits_strategy, 5),
             (strategies.alternating_strategy, 5),
-            # (strategies.back_tracing_strategy, 5)
-        ]
+            (strategies.back_tracing_strategy, 5)
+        ],
+        lengths_to_print=5
     )
 
 
